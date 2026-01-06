@@ -534,6 +534,10 @@
             document.querySelector('.loading').style.display = 'block';
 
             try {
+                console.log('Sending data to Google Apps Script...');
+                console.log('Data:', formData);
+                console.log('Script URL:', SCRIPT_URL);
+
                 // إرسال البيانات بـ no-cors
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -544,12 +548,25 @@
                     body: JSON.stringify(formData)
                 });
 
+                console.log('Data sent successfully, waiting before fetching report...');
+
                 // الانتظار قليلاً لضمان حفظ البيانات
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                console.log('Fetching report...');
 
                 // جلب التقرير بعد الحفظ
                 const reportResponse = await fetch(SCRIPT_URL + '?action=getReport');
+                
+                console.log('Report response status:', reportResponse.status);
+                
+                if (!reportResponse.ok) {
+                    throw new Error('Failed to fetch report: ' + reportResponse.status);
+                }
+                
                 const report = await reportResponse.json();
+                
+                console.log('Report received:', report);
 
                 // إخفاء Loading
                 document.querySelector('.loading').style.display = 'none';
@@ -571,9 +588,11 @@
                 submitBtn.disabled = true;
 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Detailed Error:', error);
+                console.error('Error message:', error.message);
+                console.error('Error stack:', error.stack);
                 document.querySelector('.loading').style.display = 'none';
-                showError('حدث خطأ في الاتصال');
+                showError('حدث خطأ في الاتصال: ' + error.message);
             }
         });
 
