@@ -373,7 +373,8 @@
         </div>
 
         <div class="success-message" id="successMessage">
-            تم إضافة البند بنجاح إلى سجل البناء
+            تم إضافة البند بنجاح إلى سجل البناء<br>
+            <strong id="grandTotalDisplay" style="font-size: 20px; margin-top: 10px; display: block;">💰 الإجمالي الكلي: 0 ريال</strong>
         </div>
 
         <div class="error-message" id="errorMessage">
@@ -387,7 +388,7 @@
 
     <script>
         // رابط Google Apps Script
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYzGVHO2lPLg9ujsSkM4oPikl3J4tyt8GKpX5bEwL6gB8nvXfH3KYvo20uJ65Mw0lY/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzElkImxL8qllauB0sJtJkpwIgJF4Y3igUSh5MVoIWVDf2nGM7g-IglZj4m-e8VuR01/exec';
 
         // تحميل رسالة اليوم عند فتح الصفحة
         window.addEventListener('load', loadDailyMessage);
@@ -533,18 +534,28 @@
                 // إرسال البيانات
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
+                // محاولة قراءة الرد
+                let grandTotal = null;
+                try {
+                    const result = await response.json();
+                    if (result.grandTotal) {
+                        grandTotal = result.grandTotal;
+                    }
+                } catch (jsonError) {
+                    console.log('Could not parse response, but operation likely succeeded');
+                }
+
                 // إخفاء Loading
                 document.querySelector('.loading').style.display = 'none';
 
-                // عرض رسالة النجاح
-                showSuccess();
+                // عرض رسالة النجاح مع الإجمالي
+                showSuccess(grandTotal);
 
                 // مسح الفورم
                 document.getElementById('product').value = '';
@@ -561,12 +572,21 @@
             }
         });
 
-        function showSuccess() {
+        function showSuccess(grandTotal) {
             const successMsg = document.getElementById('successMessage');
+            const grandTotalDisplay = document.getElementById('grandTotalDisplay');
+            
+            if (grandTotal !== null && grandTotal !== undefined) {
+                grandTotalDisplay.textContent = `💰 الإجمالي الكلي: ${grandTotal.toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ريال`;
+                grandTotalDisplay.style.display = 'block';
+            } else {
+                grandTotalDisplay.style.display = 'none';
+            }
+            
             successMsg.style.display = 'block';
             setTimeout(() => {
                 successMsg.style.display = 'none';
-            }, 3000);
+            }, 5000); // 5 ثواني عشان يشوف الإجمالي
         }
 
         function showError(message) {
