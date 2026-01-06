@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير المصاريف - بناء بيت أحلامنا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header .emoji {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #00a8cc;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .success-badge {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .report-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .category-icon {
+            font-size: 24px;
+        }
+
+        .category-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00a8cc;
+        }
+
+        .grand-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .grand-total-label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .grand-total-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #00a8cc;
+            border: 2px solid #00a8cc;
+        }
+
+        .btn-secondary:hover {
+            background: #00a8cc;
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00a8cc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .grand-total-amount {
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">📊</div>
+            <h1>تقرير المصاريف</h1>
+            <p>ملخص شامل لمصاريف البناء</p>
+        </div>
+
+        <div class="success-badge">
+            ✅ تم إضافة البند بنجاح!
+        </div>
+
+        <div id="loadingSection" class="loading">
+            <div class="spinner"></div>
+            <p style="color: #00a8cc; font-size: 16px;">جاري تحميل التقرير...</p>
+        </div>
+
+        <div id="reportSection" style="display: none;">
+            <div class="report-section">
+                <div class="report-title">
+                    <span>📋</span>
+                    <span>التوزيع حسب القسم</span>
+                </div>
+                <div id="categoryList"></div>
+            </div>
+
+            <div class="grand-total">
+                <div class="grand-total-label">💰 الإجمالي الكلي</div>
+                <div class="grand-total-amount" id="grandTotalAmount">0 ريال</div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="index.html" class="btn btn-primary">
+                    <span>➕</span>
+                    <span>إضافة مشترى جديد</span>
+                </a>
+                <button onclick="refreshReport()" class="btn btn-secondary">
+                    <span>🔄</span>
+                    <span>تحديث التقرير</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="errorSection" style="display: none;">
+            <div class="error-message">
+                <p>حدث خطأ في تحميل التقرير</p>
+                <p style="font-size: 14px; margin-top: 10px;">يرجى المحاولة مرة أخرى</p>
+            </div>
+            <div class="action-buttons">
+                <button onclick="loadReport()" class="btn btn-primary">
+                    <span>🔄</span>
+                    <span>إعادة المحاولة</span>
+                </button>
+                <a href="index.html" class="btn btn-secondary">
+                    <span>↩️</span>
+                    <span>العودة للصفحة الرئيسية</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // رابط Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHaDEAnwhi7xZKstdJvGbrU80Z8XYDR79uOpX6XFC8F2uBSjIlzPkjeFsiY2_MFsYh/exec';
+
+        // أيقونات التصنيفات
+        const categoryIcons = {
+            'مواد بناء': '🏗️',
+            'تشطيبات': '🎨',
+            'سيراميك وبلاط': '🔲',
+            'أبواب ونوافذ': '🚪',
+            'كهرباء': '⚡',
+            'سباكة': '🚰',
+            'تكييف وتهوية': '❄️',
+            'أدوات ومعدات': '🔧',
+            'عمالة': '👷',
+            'أخرى': '📦'
+        };
+
+        // تحميل التقرير عند فتح الصفحة
+        window.addEventListener('load', loadReport);
+
+        async function loadReport() {
+            // إخفاء الأقسام الأخرى
+            document.getElementById('reportSection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+
+            try {
+                console.log('Fetching report from Google Apps Script...');
+                
+                const response = await fetch(SCRIPT_URL + '?action=getReport');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch report');
+                }
+                
+                const report = await response.json();
+                
+                console.log('Report received:', report);
+
+                if (report.categoryTotals && report.grandTotal !== undefined) {
+                    displayReport(report.categoryTotals, report.grandTotal);
+                } else {
+                    throw new Error('Invalid report data');
+                }
+
+            } catch (error) {
+                console.error('Error loading report:', error);
+                showError();
+            }
+        }
+
+        function displayReport(categoryTotals, grandTotal) {
+            const categoryList = document.getElementById('categoryList');
+            const grandTotalAmount = document.getElementById('grandTotalAmount');
+
+            // عرض التصنيفات
+            if (Object.keys(categoryTotals).length > 0) {
+                // ترتيب التصنيفات حسب المبلغ (الأكبر أولاً)
+                const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+
+                let html = '';
+                sortedCategories.forEach(([category, total]) => {
+                    const icon = categoryIcons[category] || '📦';
+                    const formattedTotal = total.toLocaleString('ar-SA', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                    html += `
+                        <div class="category-item">
+                            <div class="category-name">
+                                <span class="category-icon">${icon}</span>
+                                <span>${category}</span>
+                            </div>
+                            <div class="category-amount">${formattedTotal} ريال</div>
+                        </div>
+                    `;
+                });
+
+                categoryList.innerHTML = html;
+            } else {
+                categoryList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">📭</div>
+                        <p>لا توجد بيانات حالياً</p>
+                    </div>
+                `;
+            }
+
+            // عرض الإجمالي الكلي
+            const formattedGrandTotal = grandTotal.toLocaleString('ar-SA', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            grandTotalAmount.textContent = formattedGrandTotal + ' ريال';
+
+            // إظهار قسم التقرير
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('reportSection').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'block';
+        }
+
+        function refreshReport() {
+            loadReport();
+        }
+    </script>
+</body>
+</html>
