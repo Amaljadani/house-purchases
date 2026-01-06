@@ -315,13 +315,13 @@
 
             <div class="form-group">
                 <label for="quantity">الكمية</label>
-                <input type="number" id="quantity" name="quantity" placeholder="مثال: 50" step="0.01" min="0.01" required>
+                <input type="text" id="quantity" name="quantity" placeholder="مثال: 50" inputmode="decimal" required>
                 <div class="option-hint">أدخل الكمية (عدد الأكياس، المتر، القطع...)</div>
             </div>
 
             <div class="form-group">
                 <label for="pricePerUnit">السعر للقطعة/الحبة (ريال)</label>
-                <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="مثال: 13.5" step="0.01" min="0">
+                <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="مثال: 13.5" inputmode="decimal">
                 <div class="option-hint">اختياري - إذا تعرف سعر القطعة الواحدة</div>
             </div>
 
@@ -329,7 +329,7 @@
 
             <div class="form-group">
                 <label for="totalPrice">الإجمالي (ريال)</label>
-                <input type="number" id="totalPrice" name="totalPrice" placeholder="مثال: 337.50" step="0.01" min="0">
+                <input type="text" id="totalPrice" name="totalPrice" placeholder="مثال: 337.50" inputmode="decimal">
                 <div class="option-hint">اختياري - إذا تعرف المبلغ الإجمالي فقط</div>
             </div>
 
@@ -373,7 +373,7 @@
         </div>
 
         <div class="success-message" id="successMessage">
-            تم إضافة البند بنجاح إلى سجل البناء
+            تم إضافة المشتريات بنجاح إلى سجل البناء
         </div>
 
         <div class="error-message" id="errorMessage">
@@ -387,7 +387,7 @@
 
     <script>
        
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8zsPHAR1YfAi_gRGrNmsOkWWx2qLJjWfq2bZEyqJ2S_-FvFwcLiECiE1m0uO_8MDz/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycXmgxoty-MZKRsrltuExE4k6VY6F3filF5jj5R1Xlye43JtRqkK22KDvn_pzA6TSv/exec';
 
         // تعيين التاريخ الحالي تلقائياً
         document.getElementById('date').valueAsDate = new Date();
@@ -451,20 +451,40 @@
         }
 
         // ربط الأحداث
-        quantityInput.addEventListener('input', updateCalculationDisplay);
+        quantityInput.addEventListener('input', function() {
+            validateNumberInput(this);
+            updateCalculationDisplay();
+        });
         pricePerUnitInput.addEventListener('input', function() {
+            validateNumberInput(this);
             if (this.value) {
                 totalPriceInput.value = ''; // مسح الإجمالي إذا أدخل سعر القطعة
             }
             updateCalculationDisplay();
         });
         totalPriceInput.addEventListener('input', function() {
+            validateNumberInput(this);
             if (this.value) {
                 pricePerUnitInput.value = ''; // مسح سعر القطعة إذا أدخل الإجمالي
             }
             updateCalculationDisplay();
         });
         productInput.addEventListener('input', updateCalculationDisplay);
+
+        // دالة للتحقق من الأرقام فقط
+        function validateNumberInput(input) {
+            // السماح بالأرقام والنقطة العشرية فقط
+            let value = input.value;
+            value = value.replace(/[^\d.]/g, ''); // إزالة أي شيء غير رقم أو نقطة
+            
+            // التأكد من نقطة عشرية واحدة فقط
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            input.value = value;
+        }
 
         // إرسال النموذج
         document.getElementById('purchaseForm').addEventListener('submit', async function(e) {
@@ -486,9 +506,9 @@
             const formData = {
                 category: document.getElementById('category').value,
                 product: document.getElementById('product').value,
-                quantity: calculatedData.quantity.toFixed(2),
-                pricePerUnit: calculatedData.pricePerUnit.toFixed(2),
-                total: calculatedData.total.toFixed(2),
+                quantity: calculatedData.quantity,
+                pricePerUnit: calculatedData.pricePerUnit,
+                total: calculatedData.total,
                 notes: document.getElementById('notes').value || '-',
                 date: document.getElementById('date').value
             };
