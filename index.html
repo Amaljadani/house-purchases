@@ -386,7 +386,7 @@
     </div>
 
     <script>
-       
+        // رابط Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycXmgxoty-MZKRsrltuExE4k6VY6F3filF5jj5R1Xlye43JtRqkK22KDvn_pzA6TSv/exec';
 
         // تعيين التاريخ الحالي تلقائياً
@@ -450,6 +450,21 @@
             submitBtn.disabled = false;
         }
 
+        // دالة للتحقق من الأرقام فقط
+        function validateNumberInput(input) {
+            // السماح بالأرقام والنقطة العشرية فقط
+            let value = input.value;
+            value = value.replace(/[^\d.]/g, ''); // إزالة أي شيء غير رقم أو نقطة
+            
+            // التأكد من نقطة عشرية واحدة فقط
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            input.value = value;
+        }
+
         // ربط الأحداث
         quantityInput.addEventListener('input', function() {
             validateNumberInput(this);
@@ -471,30 +486,9 @@
         });
         productInput.addEventListener('input', updateCalculationDisplay);
 
-        // دالة للتحقق من الأرقام فقط
-        function validateNumberInput(input) {
-            // السماح بالأرقام والنقطة العشرية فقط
-            let value = input.value;
-            value = value.replace(/[^\d.]/g, ''); // إزالة أي شيء غير رقم أو نقطة
-            
-            // التأكد من نقطة عشرية واحدة فقط
-            const parts = value.split('.');
-            if (parts.length > 2) {
-                value = parts[0] + '.' + parts.slice(1).join('');
-            }
-            
-            input.value = value;
-        }
-
         // إرسال النموذج
         document.getElementById('purchaseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            // التحقق من وجود رابط الـScript
-            if (SCRIPT_URL === 'ضعي_رابط_الويب_اب_هنا') {
-                showError('يرجى إضافة رابط Google Apps Script في الكود');
-                return;
-            }
 
             // التحقق من البيانات
             if (calculatedData.quantity === 0 || calculatedData.total === 0) {
