@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بناء بيت العمر 🏗️</title>
+    <title> بيت أحلامنا 🏗️</title>
     <style>
         * {
             margin: 0;
@@ -48,7 +48,7 @@
         }
 
         .header h1 {
-            color: #0891b2;
+            color: #00a8cc;
             font-size: 32px;
             margin-bottom: 15px;
             font-weight: 700;
@@ -60,15 +60,21 @@
         }
 
         .love-message {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.6;
-            box-shadow: 0 5px 15px rgba(25, 84, 123, 0.3);
+            font-size: 17px;
+            line-height: 1.8;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .love-message strong {
+            font-size: 19px;
+            display: block;
+            margin-bottom: 10px;
         }
 
         .form-group {
@@ -83,7 +89,7 @@
             font-size: 14px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
@@ -93,10 +99,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
-            border-color: #0891b2;
-            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+            border-color: #00a8cc;
+            box-shadow: 0 0 0 3px rgba(0, 168, 204, 0.1);
         }
 
         .btn-submit {
@@ -163,7 +169,7 @@
 
         .spinner {
             border: 3px solid #f3f3f3;
-            border-top: 3px solid #0891b2;
+            border-top: 3px solid #00a8cc;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -183,6 +189,16 @@
             font-size: 14px;
         }
 
+        .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -193,8 +209,8 @@
             }
 
             .love-message {
-                font-size: 14px;
-                padding: 15px;
+                font-size: 15px;
+                padding: 20px;
             }
         }
     </style>
@@ -202,54 +218,88 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="emoji">🏗️🏠</div>
-            <h1>بناء بيت العمر</h1>
+            <div class="emoji">🏗️</div>
+            <h1>بناء بيت أحلامنا</h1>
         </div>
 
         <div class="love-message">
-            🏡 كل طوبة وكل قطعة هنا... جزء من حلمنا اللي نبنيه سوا<br>
-            معاً نبني بيتنا، معاً نبني مستقبلنا وذكرياتنا ✨
+            <div style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #fff;">
+                أبو سلطاني
+            </div>
+            <strong style="font-size: 20px; line-height: 2;">
+                تراك السيف الأملح ورأس المال<br>
+                ودرعي من ظروف الحياة وبلاويها ❤️
+            </strong>
+            <div style="margin: 20px 0; opacity: 0.4; text-align: center; letter-spacing: 2px;">
+                ─────────────────
+            </div>
+            <div style="font-size: 16px; opacity: 0.95;">
+                كل لبنة في هذا البيت تُبنى بحبك وتفانيك<br>
+                شكراً لك على كونك السند والأمان
+            </div>
         </div>
 
         <form id="purchaseForm">
             <div class="form-group">
-                <label for="product">🧱 المادة / المنتج</label>
-                <input type="text" id="product" name="product" placeholder="مثال: سيراميك، أسمنت، أبواب، دهانات" required>
+                <label for="category">القسم</label>
+                <select id="category" name="category" required>
+                    <option value="">اختر القسم...</option>
+                    <option value="مواد بناء">مواد بناء (طوب، إسمنت، حديد)</option>
+                    <option value="تشطيبات">تشطيبات (دهانات، جبس، ديكورات)</option>
+                    <option value="سيراميك وبلاط">سيراميك وبلاط</option>
+                    <option value="أبواب ونوافذ">أبواب ونوافذ</option>
+                    <option value="كهرباء">كهرباء (أسلاك، إنارة، مفاتيح)</option>
+                    <option value="سباكة">سباكة (مواسير، خلاطات، أدوات صحية)</option>
+                    <option value="تكييف وتهوية">تكييف وتهوية</option>
+                    <option value="أدوات ومعدات">أدوات ومعدات</option>
+                    <option value="عمالة">عمالة</option>
+                    <option value="أخرى">أخرى</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="quantity">📦 الكمية</label>
-                <input type="number" id="quantity" name="quantity" placeholder="مثال: 50 (متر، كيس، قطعة)" min="1" required>
+                <label for="product">اسم المنتج أو الخدمة</label>
+                <input type="text" id="product" name="product" placeholder="مثال: سيراميك أرضيات، إسمنت، أصباغ، تركيب كهرباء..." required>
             </div>
 
             <div class="form-group">
-                <label for="price">💰 السعر (ريال)</label>
-                <input type="number" id="price" name="price" placeholder="مثال: 5000" step="0.01" min="0" required>
+                <label for="quantity">الكمية</label>
+                <input type="text" id="quantity" name="quantity" placeholder="مثال: 50 كيس، 100 متر، 5 أبواب..." required>
             </div>
 
             <div class="form-group">
-                <label for="date">📅 التاريخ</label>
+                <label for="price">السعر (ريال)</label>
+                <input type="number" id="price" name="price" placeholder="مثال: 15000" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">ملاحظات (اختياري)</label>
+                <input type="text" id="notes" name="notes" placeholder="أي تفاصيل إضافية...">
+            </div>
+
+            <div class="form-group">
+                <label for="date">التاريخ</label>
                 <input type="date" id="date" name="date" required>
             </div>
 
-            <button type="submit" class="btn-submit">✅ إضافة إلى سجل البناء</button>
+            <button type="submit" class="btn-submit">إضافة إلى سجل البناء</button>
         </form>
 
         <div class="loading">
             <div class="spinner"></div>
-            <p style="margin-top: 10px; color: #0891b2;">جاري الحفظ...</p>
+            <p style="margin-top: 10px; color: #00a8cc;">جاري الحفظ...</p>
         </div>
 
         <div class="success-message" id="successMessage">
-            ✅ تمت الإضافة بنجاح! خطوة أقرب لبيت الأحلام 🏡
+            تم إضافة البند بنجاح إلى سجل البناء
         </div>
 
         <div class="error-message" id="errorMessage">
-            ❌ حدث خطأ، يرجى المحاولة مرة أخرى
+            حدث خطأ، يرجى المحاولة مرة أخرى
         </div>
 
         <div class="footer">
-            بُني بكل حب لبناء أحلامكم ❤️🏡
+            بُني بكل حب ❤️
         </div>
     </div>
 
@@ -271,9 +321,11 @@
 
             // جمع البيانات
             const formData = {
+                category: document.getElementById('category').value,
                 product: document.getElementById('product').value,
                 quantity: document.getElementById('quantity').value,
                 price: document.getElementById('price').value,
+                notes: document.getElementById('notes').value || '-',
                 date: document.getElementById('date').value
             };
 
@@ -299,9 +351,12 @@
                 // عرض رسالة النجاح
                 showSuccess();
 
-                // مسح الفورم
-                document.getElementById('purchaseForm').reset();
-                document.getElementById('date').valueAsDate = new Date();
+                // مسح الفورم (ما عدا التاريخ والقسم)
+                document.getElementById('product').value = '';
+                document.getElementById('quantity').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('notes').value = '';
+                // القسم والتاريخ يبقون عشان يسهل الإدخال المتكرر
 
             } catch (error) {
                 document.querySelector('.loading').style.display = 'none';
@@ -319,12 +374,36 @@
 
         function showError(message) {
             const errorMsg = document.getElementById('errorMessage');
-            errorMsg.textContent = '❌ ' + message;
+            errorMsg.textContent = message;
             errorMsg.style.display = 'block';
             setTimeout(() => {
                 errorMsg.style.display = 'none';
             }, 3000);
         }
+
+        // تلميحات ذكية بناءً على القسم المختار
+        document.getElementById('category').addEventListener('change', function() {
+            const category = this.value;
+            const productInput = document.getElementById('product');
+            const quantityInput = document.getElementById('quantity');
+            
+            const suggestions = {
+                'مواد بناء': { product: 'إسمنت، حديد، طوب...', quantity: 'عدد الأكياس، الأطنان...' },
+                'تشطيبات': { product: 'دهان، جبس، ورق جدران...', quantity: 'عدد العلب، المتر المربع...' },
+                'سيراميك وبلاط': { product: 'سيراميك أرضيات، بورسلان...', quantity: 'المتر المربع، عدد الكراتين...' },
+                'أبواب ونوافذ': { product: 'باب خشبي، شباك ألمنيوم...', quantity: 'العدد...' },
+                'كهرباء': { product: 'كابلات، إنارة، لوحة كهرباء...', quantity: 'المتر، العدد...' },
+                'سباكة': { product: 'مواسير، خلاط، مغسلة...', quantity: 'المتر، العدد...' },
+                'تكييف وتهوية': { product: 'مكيف سبليت، مروحة...', quantity: 'العدد، الوحدات...' },
+                'أدوات ومعدات': { product: 'مثقاب، سقالة، خلاط إسمنت...', quantity: 'العدد...' },
+                'عمالة': { product: 'بناء، دهان، سباكة...', quantity: 'الأيام، المهمة...' }
+            };
+
+            if (suggestions[category]) {
+                productInput.placeholder = 'مثال: ' + suggestions[category].product;
+                quantityInput.placeholder = 'مثال: ' + suggestions[category].quantity;
+            }
+        });
     </script>
 </body>
 </html>
