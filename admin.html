@@ -201,11 +201,7 @@
             line-height: 1.6;
         }
 
-        .login-section, .message-section {
-            display: none;
-        }
-
-        .login-section.show, .message-section.show {
+        .message-section {
             display: block;
         }
 
@@ -219,26 +215,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Login Section -->
-        <div class="login-section show" id="loginSection">
-            <div class="header">
-                <div class="emoji">🔐</div>
-                <h1>لوحة التحكم</h1>
-                <p style="color: #666;">أدخلي كلمة السر للوصول</p>
-            </div>
-
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="password">كلمة السر</label>
-                    <input type="password" id="password" name="password" placeholder="أدخلي كلمة السر" required>
-                </div>
-
-                <button type="submit" class="btn">دخول</button>
-            </form>
-
-            <div class="error-message" id="loginError">كلمة السر غير صحيحة</div>
-        </div>
-
         <!-- Message Update Section -->
         <div class="message-section" id="messageSection">
             <div class="header">
@@ -275,38 +251,15 @@
                 حدث خطأ، يرجى المحاولة مرة أخرى
             </div>
 
-            <div class="footer">
-                <button onclick="logout()" style="background: none; border: none; color: #667eea; cursor: pointer; text-decoration: underline;">تسجيل الخروج</button>
-            </div>
         </div>
     </div>
 
     <script>
         // رابط Google Apps Script (نفس الرابط)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxW_ALhLGTJ6uZ8ft0LlkXJdlXTK0IqTkxc8e4T3kfHso6kWIqa0re49vhkwC6n-5NO/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYzGVHO2lPLg9ujsSkM4oPikl3J4tyt8GKpX5bEwL6gB8nvXfH3KYvo20uJ65Mw0lY/exec';
         
-        // كلمة السر (غيريها لكلمة سر خاصة فيك!)
-        const ADMIN_PASSWORD = 'امجاد2025';
-
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
-            showMessageSection();
-            loadCurrentMessage();
-        }
-
-        // Login Form
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('password').value;
-
-            if (password === ADMIN_PASSWORD) {
-                localStorage.setItem('adminLoggedIn', 'true');
-                showMessageSection();
-                loadCurrentMessage();
-            } else {
-                showError('loginError');
-            }
-        });
+        // تحميل الرسالة الحالية عند فتح الصفحة
+        window.addEventListener('load', loadCurrentMessage);
 
         // Message Form
         document.getElementById('messageForm').addEventListener('submit', async function(e) {
@@ -356,16 +309,6 @@
             } catch (error) {
                 document.getElementById('currentMessage').textContent = 'اي لافيو ❤️';
             }
-        }
-
-        function showMessageSection() {
-            document.getElementById('loginSection').classList.remove('show');
-            document.getElementById('messageSection').classList.add('show');
-        }
-
-        function logout() {
-            localStorage.removeItem('adminLoggedIn');
-            location.reload();
         }
 
         function showSuccess() {
