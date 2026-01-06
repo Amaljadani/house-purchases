@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بناء بيت العمر 🏗️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #0891b2;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header .emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .love-message {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(25, 84, 123, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0891b2;
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0891b2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .love-message {
+                font-size: 14px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">🏗️🏠</div>
+            <h1>بناء بيت العمر</h1>
+        </div>
+
+        <div class="love-message">
+            🏡 كل طوبة وكل قطعة هنا... جزء من حلمنا اللي نبنيه سوا<br>
+            معاً نبني بيتنا، معاً نبني مستقبلنا وذكرياتنا ✨
+        </div>
+
+        <form id="purchaseForm">
+            <div class="form-group">
+                <label for="product">🧱 المادة / المنتج</label>
+                <input type="text" id="product" name="product" placeholder="مثال: سيراميك، أسمنت، أبواب، دهانات" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">📦 الكمية</label>
+                <input type="number" id="quantity" name="quantity" placeholder="مثال: 50 (متر، كيس، قطعة)" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="price">💰 السعر (ريال)</label>
+                <input type="number" id="price" name="price" placeholder="مثال: 5000" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">📅 التاريخ</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <button type="submit" class="btn-submit">✅ إضافة إلى سجل البناء</button>
+        </form>
+
+        <div class="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px; color: #0891b2;">جاري الحفظ...</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ تمت الإضافة بنجاح! خطوة أقرب لبيت الأحلام 🏡
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            ❌ حدث خطأ، يرجى المحاولة مرة أخرى
+        </div>
+
+        <div class="footer">
+            بُني بكل حب لبناء أحلامكم ❤️🏡
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ هنا تحطين رابط الـWeb App من Google Apps Script
+        const SCRIPT_URL = 'ضعي_رابط_الويب_اب_هنا';
+
+        // تعيين التاريخ الحالي تلقائياً
+        document.getElementById('date').valueAsDate = new Date();
+
+        document.getElementById('purchaseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // التحقق من وجود رابط الـScript
+            if (SCRIPT_URL === 'ضعي_رابط_الويب_اب_هنا') {
+                showError('يرجى إضافة رابط Google Apps Script في الكود');
+                return;
+            }
+
+            // جمع البيانات
+            const formData = {
+                product: document.getElementById('product').value,
+                quantity: document.getElementById('quantity').value,
+                price: document.getElementById('price').value,
+                date: document.getElementById('date').value
+            };
+
+            // إخفاء الرسائل السابقة
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.querySelector('.loading').style.display = 'block';
+
+            try {
+                // إرسال البيانات
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // إخفاء Loading
+                document.querySelector('.loading').style.display = 'none';
+
+                // عرض رسالة النجاح
+                showSuccess();
+
+                // مسح الفورم
+                document.getElementById('purchaseForm').reset();
+                document.getElementById('date').valueAsDate = new Date();
+
+            } catch (error) {
+                document.querySelector('.loading').style.display = 'none';
+                showError('حدث خطأ في الاتصال');
+            }
+        });
+
+        function showSuccess() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = '❌ ' + message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
