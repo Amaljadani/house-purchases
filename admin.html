@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - رسائل اليوم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="password"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .current-message {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+
+        .current-message h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .current-message p {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .login-section, .message-section {
+            display: none;
+        }
+
+        .login-section.show, .message-section.show {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <div class="login-section show" id="loginSection">
+            <div class="header">
+                <div class="emoji">🔐</div>
+                <h1>لوحة التحكم</h1>
+                <p style="color: #666;">أدخلي كلمة السر للوصول</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="password">كلمة السر</label>
+                    <input type="password" id="password" name="password" placeholder="أدخلي كلمة السر" required>
+                </div>
+
+                <button type="submit" class="btn">دخول</button>
+            </form>
+
+            <div class="error-message" id="loginError">كلمة السر غير صحيحة</div>
+        </div>
+
+        <!-- Message Update Section -->
+        <div class="message-section" id="messageSection">
+            <div class="header">
+                <div class="emoji">💌</div>
+                <h1>رسالة اليوم</h1>
+                <p style="color: #666;">غيري الرسالة اللي راح تظهر لزوجك</p>
+            </div>
+
+            <div class="current-message" id="currentMessageBox">
+                <h3>الرسالة الحالية:</h3>
+                <p id="currentMessage">جاري التحميل...</p>
+            </div>
+
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="newMessage">الرسالة الجديدة</label>
+                    <textarea id="newMessage" name="newMessage" placeholder="مثال: اي لافيو ❤️" required></textarea>
+                    <div class="hint">اكتبي الرسالة اللي تبينها تظهر في الموقع</div>
+                </div>
+
+                <button type="submit" class="btn">حفظ وتحديث الرسالة</button>
+            </form>
+
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px; color: #667eea;">جاري التحديث...</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                تم تحديث الرسالة بنجاح! ✨
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                حدث خطأ، يرجى المحاولة مرة أخرى
+            </div>
+
+            <div class="footer">
+                <button onclick="logout()" style="background: none; border: none; color: #667eea; cursor: pointer; text-decoration: underline;">تسجيل الخروج</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // رابط Google Apps Script (نفس الرابط)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycXmgxoty-MZKRsrltuExE4k6VY6F3filF5jj5R1Xlye43JtRqkK22KDvn_pzA6TSv/exec';
+        
+        // كلمة السر (غيريها لكلمة سر خاصة فيك!)
+        const ADMIN_PASSWORD = 'امجاد2025';
+
+        // Check if already logged in
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            showMessageSection();
+            loadCurrentMessage();
+        }
+
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showMessageSection();
+                loadCurrentMessage();
+            } else {
+                showError('loginError');
+            }
+        });
+
+        // Message Form
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const newMessage = document.getElementById('newMessage').value;
+
+            // إخفاء الرسائل السابقة
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.querySelector('.loading').style.display = 'block';
+
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=updateMessage', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'updateMessage',
+                        message: newMessage
+                    })
+                });
+
+                document.querySelector('.loading').style.display = 'none';
+                showSuccess();
+
+                // Update current message display
+                document.getElementById('currentMessage').textContent = newMessage;
+                document.getElementById('newMessage').value = '';
+
+            } catch (error) {
+                document.querySelector('.loading').style.display = 'none';
+                showError('errorMessage');
+            }
+        });
+
+        async function loadCurrentMessage() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getMessage');
+                const data = await response.json();
+                
+                if (data.message) {
+                    document.getElementById('currentMessage').textContent = data.message;
+                }
+            } catch (error) {
+                document.getElementById('currentMessage').textContent = 'اي لافيو ❤️';
+            }
+        }
+
+        function showMessageSection() {
+            document.getElementById('loginSection').classList.remove('show');
+            document.getElementById('messageSection').classList.add('show');
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        function showSuccess() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(elementId) {
+            const errorMsg = document.getElementById(elementId);
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
