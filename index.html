@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> بيت أحلامنا 🏗️</title>
+    <title>بناء بيت أحلامنا 🏗️</title>
     <style>
         * {
             margin: 0;
@@ -26,7 +26,7 @@
             border-radius: 25px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
             animation: fadeIn 0.5s ease-in;
         }
@@ -71,12 +71,6 @@
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .love-message strong {
-            font-size: 19px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -105,6 +99,68 @@
             box-shadow: 0 0 0 3px rgba(0, 168, 204, 0.1);
         }
 
+        .option-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 15px 0;
+            color: #999;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .calculation-display {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            display: none;
+            animation: slideIn 0.3s ease-in;
+            border: 2px solid #4caf50;
+        }
+
+        .calculation-display.show {
+            display: block;
+        }
+
+        .calculation-title {
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(46, 125, 50, 0.2);
+            font-size: 15px;
+        }
+
+        .calculation-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 17px;
+            color: #1b5e20;
+            margin-top: 5px;
+        }
+
+        .calculation-label {
+            color: #2e7d32;
+        }
+
+        .calculation-value {
+            font-weight: 600;
+            color: #1b5e20;
+        }
+
         .btn-submit {
             width: 100%;
             padding: 15px;
@@ -126,6 +182,11 @@
 
         .btn-submit:active {
             transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .success-message {
@@ -189,16 +250,6 @@
             font-size: 14px;
         }
 
-        .category-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #e3f2fd;
-            color: #1976d2;
-            border-radius: 5px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -259,17 +310,48 @@
 
             <div class="form-group">
                 <label for="product">اسم المنتج أو الخدمة</label>
-                <input type="text" id="product" name="product" placeholder="مثال: سيراميك أرضيات، إسمنت، أصباغ، تركيب كهرباء..." required>
+                <input type="text" id="product" name="product" placeholder="مثال: سيراميك أرضيات، إسمنت، أصباغ..." required>
             </div>
 
             <div class="form-group">
                 <label for="quantity">الكمية</label>
-                <input type="text" id="quantity" name="quantity" placeholder="مثال: 50 كيس، 100 متر، 5 أبواب..." required>
+                <input type="number" id="quantity" name="quantity" placeholder="مثال: 50" step="0.01" min="0.01" required>
+                <div class="option-hint">أدخل الكمية (عدد الأكياس، المتر، القطع...)</div>
             </div>
 
             <div class="form-group">
-                <label for="price">السعر (ريال)</label>
-                <input type="number" id="price" name="price" placeholder="مثال: 15000" step="0.01" min="0" required>
+                <label for="pricePerUnit">السعر للقطعة/الحبة (ريال)</label>
+                <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="مثال: 13.5" step="0.01" min="0">
+                <div class="option-hint">اختياري - إذا تعرف سعر القطعة الواحدة</div>
+            </div>
+
+            <div class="or-divider">أو</div>
+
+            <div class="form-group">
+                <label for="totalPrice">الإجمالي (ريال)</label>
+                <input type="number" id="totalPrice" name="totalPrice" placeholder="مثال: 337.50" step="0.01" min="0">
+                <div class="option-hint">اختياري - إذا تعرف المبلغ الإجمالي فقط</div>
+            </div>
+
+            <!-- Calculation Display Box -->
+            <div class="calculation-display" id="calculationDisplay">
+                <div class="calculation-title">📊 ملخص الحساب</div>
+                <div class="calculation-row">
+                    <span class="calculation-label">المنتج:</span>
+                    <span class="calculation-value" id="displayProduct">-</span>
+                </div>
+                <div class="calculation-row">
+                    <span class="calculation-label">الكمية:</span>
+                    <span class="calculation-value" id="displayQuantity">-</span>
+                </div>
+                <div class="calculation-row">
+                    <span class="calculation-label">السعر للقطعة:</span>
+                    <span class="calculation-value" id="displayPricePerUnit">-</span>
+                </div>
+                <div class="calculation-row">
+                    <span class="calculation-label">الإجمالي:</span>
+                    <span class="calculation-value" id="displayTotal">-</span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -282,7 +364,7 @@
                 <input type="date" id="date" name="date" required>
             </div>
 
-            <button type="submit" class="btn-submit">إضافة إلى سجل البناء</button>
+            <button type="submit" class="btn-submit" id="submitBtn">إضافة إلى سجل البناء</button>
         </form>
 
         <div class="loading">
@@ -304,12 +386,87 @@
     </div>
 
     <script>
-        // ⚠️ هنا تحطين رابط الـWeb App من Google Apps Script
-        const SCRIPT_URL = 'ضعي_رابط_الويب_اب_هنا';
+       
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPKWUrrb7CDLUz2AnjRnFNQIUapYunaZw8L_HOCQD8FO2hrxShl5_9HGYNLxiYfFwG/exec';
 
         // تعيين التاريخ الحالي تلقائياً
         document.getElementById('date').valueAsDate = new Date();
 
+        // العناصر
+        const quantityInput = document.getElementById('quantity');
+        const pricePerUnitInput = document.getElementById('pricePerUnit');
+        const totalPriceInput = document.getElementById('totalPrice');
+        const productInput = document.getElementById('product');
+        const calculationDisplay = document.getElementById('calculationDisplay');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // متغيرات للحساب
+        let calculatedData = {
+            quantity: 0,
+            pricePerUnit: 0,
+            total: 0
+        };
+
+        // دالة تحديث العرض
+        function updateCalculationDisplay() {
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const pricePerUnit = parseFloat(pricePerUnitInput.value) || 0;
+            const totalPrice = parseFloat(totalPriceInput.value) || 0;
+            const product = productInput.value.trim();
+
+            // إخفاء الصندوق إذا ما في بيانات كافية
+            if (quantity === 0 || (pricePerUnit === 0 && totalPrice === 0)) {
+                calculationDisplay.classList.remove('show');
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // الحسابات
+            let finalPricePerUnit = pricePerUnit;
+            let finalTotal = totalPrice;
+
+            if (pricePerUnit > 0) {
+                // المستخدم أدخل سعر القطعة
+                finalTotal = quantity * pricePerUnit;
+            } else if (totalPrice > 0) {
+                // المستخدم أدخل الإجمالي
+                finalPricePerUnit = totalPrice / quantity;
+            }
+
+            // حفظ البيانات المحسوبة
+            calculatedData = {
+                quantity: quantity,
+                pricePerUnit: finalPricePerUnit,
+                total: finalTotal
+            };
+
+            // عرض النتائج
+            document.getElementById('displayProduct').textContent = product || '-';
+            document.getElementById('displayQuantity').textContent = quantity.toFixed(2);
+            document.getElementById('displayPricePerUnit').textContent = finalPricePerUnit.toFixed(2) + ' ريال';
+            document.getElementById('displayTotal').textContent = finalTotal.toFixed(2) + ' ريال';
+
+            calculationDisplay.classList.add('show');
+            submitBtn.disabled = false;
+        }
+
+        // ربط الأحداث
+        quantityInput.addEventListener('input', updateCalculationDisplay);
+        pricePerUnitInput.addEventListener('input', function() {
+            if (this.value) {
+                totalPriceInput.value = ''; // مسح الإجمالي إذا أدخل سعر القطعة
+            }
+            updateCalculationDisplay();
+        });
+        totalPriceInput.addEventListener('input', function() {
+            if (this.value) {
+                pricePerUnitInput.value = ''; // مسح سعر القطعة إذا أدخل الإجمالي
+            }
+            updateCalculationDisplay();
+        });
+        productInput.addEventListener('input', updateCalculationDisplay);
+
+        // إرسال النموذج
         document.getElementById('purchaseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -319,12 +476,19 @@
                 return;
             }
 
+            // التحقق من البيانات
+            if (calculatedData.quantity === 0 || calculatedData.total === 0) {
+                showError('يرجى إدخال الكمية وسعر القطعة أو الإجمالي');
+                return;
+            }
+
             // جمع البيانات
             const formData = {
                 category: document.getElementById('category').value,
                 product: document.getElementById('product').value,
-                quantity: document.getElementById('quantity').value,
-                price: document.getElementById('price').value,
+                quantity: calculatedData.quantity.toFixed(2),
+                pricePerUnit: calculatedData.pricePerUnit.toFixed(2),
+                total: calculatedData.total.toFixed(2),
                 notes: document.getElementById('notes').value || '-',
                 date: document.getElementById('date').value
             };
@@ -351,12 +515,14 @@
                 // عرض رسالة النجاح
                 showSuccess();
 
-                // مسح الفورم (ما عدا التاريخ والقسم)
+                // مسح الفورم
                 document.getElementById('product').value = '';
                 document.getElementById('quantity').value = '';
-                document.getElementById('price').value = '';
+                document.getElementById('pricePerUnit').value = '';
+                document.getElementById('totalPrice').value = '';
                 document.getElementById('notes').value = '';
-                // القسم والتاريخ يبقون عشان يسهل الإدخال المتكرر
+                calculationDisplay.classList.remove('show');
+                submitBtn.disabled = true;
 
             } catch (error) {
                 document.querySelector('.loading').style.display = 'none';
@@ -380,30 +546,6 @@
                 errorMsg.style.display = 'none';
             }, 3000);
         }
-
-        // تلميحات ذكية بناءً على القسم المختار
-        document.getElementById('category').addEventListener('change', function() {
-            const category = this.value;
-            const productInput = document.getElementById('product');
-            const quantityInput = document.getElementById('quantity');
-            
-            const suggestions = {
-                'مواد بناء': { product: 'إسمنت، حديد، طوب...', quantity: 'عدد الأكياس، الأطنان...' },
-                'تشطيبات': { product: 'دهان، جبس، ورق جدران...', quantity: 'عدد العلب، المتر المربع...' },
-                'سيراميك وبلاط': { product: 'سيراميك أرضيات، بورسلان...', quantity: 'المتر المربع، عدد الكراتين...' },
-                'أبواب ونوافذ': { product: 'باب خشبي، شباك ألمنيوم...', quantity: 'العدد...' },
-                'كهرباء': { product: 'كابلات، إنارة، لوحة كهرباء...', quantity: 'المتر، العدد...' },
-                'سباكة': { product: 'مواسير، خلاط، مغسلة...', quantity: 'المتر، العدد...' },
-                'تكييف وتهوية': { product: 'مكيف سبليت، مروحة...', quantity: 'العدد، الوحدات...' },
-                'أدوات ومعدات': { product: 'مثقاب، سقالة، خلاط إسمنت...', quantity: 'العدد...' },
-                'عمالة': { product: 'بناء، دهان، سباكة...', quantity: 'الأيام، المهمة...' }
-            };
-
-            if (suggestions[category]) {
-                productInput.placeholder = 'مثال: ' + suggestions[category].product;
-                quantityInput.placeholder = 'مثال: ' + suggestions[category].quantity;
-            }
-        });
     </script>
 </body>
 </html>
