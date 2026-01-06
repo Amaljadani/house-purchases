@@ -275,10 +275,10 @@
 
         <div class="love-message">
             <div style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #fff;">
-                أبو سلطاني
+                رسالة اليوم
             </div>
-            <strong style="font-size: 20px; line-height: 2;">
-               رسالة اليوم: اي لافيو ❤️  <br> 
+            <strong id="dailyMessage" style="font-size: 20px; line-height: 2;">
+                اي لافيو ❤️
             </strong>
             <div style="margin: 20px 0; opacity: 0.4; text-align: center; letter-spacing: 2px;">
                 ─────────────────
@@ -372,7 +372,7 @@
         </div>
 
         <div class="success-message" id="successMessage">
-            تم إضافة المشتريات بنجاح إلى سجل البناء
+            تم إضافة البند بنجاح إلى سجل البناء
         </div>
 
         <div class="error-message" id="errorMessage">
@@ -387,6 +387,23 @@
     <script>
         // رابط Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycXmgxoty-MZKRsrltuExE4k6VY6F3filF5jj5R1Xlye43JtRqkK22KDvn_pzA6TSv/exec';
+
+        // تحميل رسالة اليوم عند فتح الصفحة
+        window.addEventListener('load', loadDailyMessage);
+
+        async function loadDailyMessage() {
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getMessage');
+                const data = await response.json();
+                
+                if (data.message) {
+                    document.getElementById('dailyMessage').innerHTML = data.message;
+                }
+            } catch (error) {
+                // في حال الفشل، تبقى الرسالة الافتراضية
+                console.log('Could not load daily message');
+            }
+        }
 
         // تعيين التاريخ الحالي تلقائياً
         document.getElementById('date').valueAsDate = new Date();
