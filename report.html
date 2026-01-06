@@ -258,7 +258,7 @@
             <p>ملخص شامل لمصاريف البناء</p>
         </div>
 
-        <div class="success-badge">
+        <div class="success-badge" id="successBadge" style="display: none;">
             ✅ تم إضافة البند بنجاح!
         </div>
 
@@ -313,7 +313,13 @@
 
     <script>
         // رابط Google Apps Script
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHaDEAnwhi7xZKstdJvGbrU80Z8XYDR79uOpX6XFC8F2uBSjIlzPkjeFsiY2_MFsYh/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxW_ALhLGTJ6uZ8ft0LlkXJdlXTK0IqTkxc8e4T3kfHso6kWIqa0re49vhkwC6n-5NO/exec';
+
+        // التحقق من وجود معامل النجاح في الـURL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            document.getElementById('successBadge').style.display = 'block';
+        }
 
         // أيقونات التصنيفات
         const categoryIcons = {
@@ -328,6 +334,23 @@
             'عمالة': '👷',
             'أخرى': '📦'
         };
+
+        // دالة تنسيق الأرقام بالنظام الأمريكي
+        function formatArabicNumber(number) {
+            // تحويل الرقم لصيغة عشرية بمنزلتين
+            const formatted = number.toFixed(2);
+            
+            // فصل الجزء الصحيح عن العشري
+            const parts = formatted.split('.');
+            const integerPart = parts[0];
+            const decimalPart = parts[1];
+            
+            // إضافة الفواصل للأرقام الكبيرة (فاصلة إنجليزية)
+            const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            // دمج الجزء الصحيح والعشري بنقطة
+            return withCommas + '.' + decimalPart;
+        }
 
         // تحميل التقرير عند فتح الصفحة
         window.addEventListener('load', loadReport);
@@ -375,10 +398,7 @@
                 let html = '';
                 sortedCategories.forEach(([category, total]) => {
                     const icon = categoryIcons[category] || '📦';
-                    const formattedTotal = total.toLocaleString('ar-SA', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
+                    const formattedTotal = formatArabicNumber(total);
 
                     html += `
                         <div class="category-item">
@@ -402,10 +422,7 @@
             }
 
             // عرض الإجمالي الكلي
-            const formattedGrandTotal = grandTotal.toLocaleString('ar-SA', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
+            const formattedGrandTotal = formatArabicNumber(grandTotal);
             grandTotalAmount.textContent = formattedGrandTotal + ' ريال';
 
             // إظهار قسم التقرير
