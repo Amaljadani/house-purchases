@@ -472,6 +472,23 @@
             total: 0
         };
 
+        // دالة تنسيق الأرقام بالنظام الأمريكي
+        function formatArabicNumber(number) {
+            // تحويل الرقم لصيغة عشرية بمنزلتين
+            const formatted = number.toFixed(2);
+            
+            // فصل الجزء الصحيح عن العشري
+            const parts = formatted.split('.');
+            const integerPart = parts[0];
+            const decimalPart = parts[1];
+            
+            // إضافة الفواصل للأرقام الكبيرة (فاصلة إنجليزية)
+            const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            // دمج الجزء الصحيح والعشري بنقطة
+            return withCommas + '.' + decimalPart;
+        }
+
         // دالة تحديث العرض
         function updateCalculationDisplay() {
             const quantity = parseFloat(quantityInput.value) || 0;
@@ -507,9 +524,9 @@
 
             // عرض النتائج
             document.getElementById('displayProduct').textContent = product || '-';
-            document.getElementById('displayQuantity').textContent = quantity.toFixed(2);
-            document.getElementById('displayPricePerUnit').textContent = finalPricePerUnit.toFixed(2) + ' ريال';
-            document.getElementById('displayTotal').textContent = finalTotal.toFixed(2) + ' ريال';
+            document.getElementById('displayQuantity').textContent = formatArabicNumber(quantity);
+            document.getElementById('displayPricePerUnit').textContent = formatArabicNumber(finalPricePerUnit) + ' ريال';
+            document.getElementById('displayTotal').textContent = formatArabicNumber(finalTotal) + ' ريال';
 
             calculationDisplay.classList.add('show');
             submitBtn.disabled = false;
@@ -573,7 +590,6 @@
             };
 
             // إخفاء الرسائل السابقة
-            document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
             document.querySelector('.loading').style.display = 'block';
 
@@ -605,8 +621,8 @@
                 calculationDisplay.classList.remove('show');
                 submitBtn.disabled = true;
 
-                // الانتقال لصفحة التقرير
-                window.location.href = 'report.html';
+                // الانتقال لصفحة التقرير مع معامل النجاح
+                window.location.href = 'report.html?success=true';
 
             } catch (error) {
                 console.error('Detailed Error:', error);
