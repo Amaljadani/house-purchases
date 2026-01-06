@@ -373,8 +373,11 @@
         </div>
 
         <div class="success-message" id="successMessage">
-            تم إضافة البند بنجاح إلى سجل البناء<br>
-            <strong id="grandTotalDisplay" style="font-size: 20px; margin-top: 10px; display: block;">💰 الإجمالي الكلي: 0 ريال</strong>
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">✅ تم إضافة البند بنجاح!</div>
+            <div id="categoryBreakdown" style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; margin: 15px 0; text-align: right;"></div>
+            <div id="grandTotalDisplay" style="font-size: 22px; font-weight: 700; margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3);">
+                💰 الإجمالي الكلي: 0 ريال
+            </div>
         </div>
 
         <div class="error-message" id="errorMessage">
@@ -388,7 +391,7 @@
 
     <script>
         // رابط Google Apps Script
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzElkImxL8qllauB0sJtJkpwIgJF4Y3igUSh5MVoIWVDf2nGM7g-IglZj4m-e8VuR01/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxW_ALhLGTJ6uZ8ft0LlkXJdlXTK0IqTkxc8e4T3kfHso6kWIqa0re49vhkwC6n-5NO/exec';
 
         // تحميل رسالة اليوم عند فتح الصفحة
         window.addEventListener('load', loadDailyMessage);
@@ -531,31 +534,28 @@
             document.querySelector('.loading').style.display = 'block';
 
             try {
-                // إرسال البيانات
+                // إرسال البيانات (بدون no-cors عشان نقدر نقرأ الرد)
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    redirect: 'follow',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                // محاولة قراءة الرد
-                let grandTotal = null;
-                try {
-                    const result = await response.json();
-                    if (result.grandTotal) {
-                        grandTotal = result.grandTotal;
-                    }
-                } catch (jsonError) {
-                    console.log('Could not parse response, but operation likely succeeded');
-                }
+                // قراءة الرد
+                const result = await response.json();
 
                 // إخفاء Loading
                 document.querySelector('.loading').style.display = 'none';
 
-                // عرض رسالة النجاح مع الإجمالي
-                showSuccess(grandTotal);
+                // عرض رسالة النجاح مع التقرير
+                if (result.categoryTotals && result.grandTotal !== undefined) {
+                    showSuccess(result.categoryTotals, result.grandTotal);
+                } else {
+                    showSuccess(null, null);
+                }
 
                 // مسح الفورم
                 document.getElementById('product').value = '';
@@ -567,26 +567,68 @@
                 submitBtn.disabled = true;
 
             } catch (error) {
+                console.error('Error:', error);
                 document.querySelector('.loading').style.display = 'none';
                 showError('حدث خطأ في الاتصال');
             }
         });
 
-        function showSuccess(grandTotal) {
+        function showSuccess(categoryTotals, grandTotal) {
             const successMsg = document.getElementById('successMessage');
+            const categoryBreakdown = document.getElementById('categoryBreakdown');
             const grandTotalDisplay = document.getElementById('grandTotalDisplay');
             
-            if (grandTotal !== null && grandTotal !== undefined) {
-                grandTotalDisplay.textContent = `💰 الإجمالي الكلي: ${grandTotal.toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ريال`;
-                grandTotalDisplay.style.display = 'block';
+            // عرض تفاصيل التصنيفات
+            if (categoryTotals && Object.keys(categoryTotals).length > 0) {
+                let breakdownHTML = '<div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">📊 الإجمالي حسب القسم:</div>';
+                
+                // أيقونات التصنيفات
+                const categoryIcons = {
+                    'مواد بناء': '🏗️',
+                    'تشطيبات': '🎨',
+                    'سيراميك وبلاط': '🔲',
+                    'أبواب ونوافذ': '🚪',
+                    'كهرباء': '⚡',
+                    'سباكة': '🚰',
+                    'تكييف وتهوية': '❄️',
+                    'أدوات ومعدات': '🔧',
+                    'عمالة': '👷',
+                    'أخرى': '📦'
+                };
+                
+                // ترتيب التصنيفات حسب المبلغ (الأكبر أولاً)
+                const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+                
+                sortedCategories.forEach(([category, total]) => {
+                    const icon = categoryIcons[category] || '📦';
+                    const formattedTotal = total.toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    breakdownHTML += `
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 15px;">
+                            <span>${icon} ${category}</span>
+                            <span style="font-weight: 700;">${formattedTotal} ريال</span>
+                        </div>
+                    `;
+                });
+                
+                categoryBreakdown.innerHTML = breakdownHTML;
             } else {
-                grandTotalDisplay.style.display = 'none';
+                categoryBreakdown.innerHTML = '<div style="color: rgba(255,255,255,0.8);">لا توجد بيانات كافية</div>';
+            }
+            
+            // عرض الإجمالي الكلي
+            if (grandTotal !== null && grandTotal !== undefined) {
+                const formattedGrandTotal = grandTotal.toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                grandTotalDisplay.innerHTML = `💰 الإجمالي الكلي: <span style="color: #FFD700;">${formattedGrandTotal} ريال</span>`;
+            } else {
+                grandTotalDisplay.innerHTML = '💰 الإجمالي الكلي: غير متوفر';
             }
             
             successMsg.style.display = 'block';
+            
+            // إخفاء بعد 8 ثواني (وقت كافي لقراءة التقرير)
             setTimeout(() => {
                 successMsg.style.display = 'none';
-            }, 5000); // 5 ثواني عشان يشوف الإجمالي
+            }, 8000);
         }
 
         function showError(message) {
