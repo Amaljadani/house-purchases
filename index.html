@@ -391,7 +391,7 @@
 
     <script>
         // رابط Google Apps Script
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6wbp1jyi9yPfg6qZb3OdV89eOVvYL5es00EyMugn0umqD4zFd3_I8MJOVTZeyuAaj/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHaDEAnwhi7xZKstdJvGbrU80Z8XYDR79uOpX6XFC8F2uBSjIlzPkjeFsiY2_MFsYh/exec';
 
         // تحميل رسالة اليوم عند فتح الصفحة
         window.addEventListener('load', loadDailyMessage);
@@ -534,25 +534,29 @@
             document.querySelector('.loading').style.display = 'block';
 
             try {
-                // إرسال البيانات (بدون no-cors عشان نقدر نقرأ الرد)
-                const response = await fetch(SCRIPT_URL, {
+                // إرسال البيانات بـ no-cors
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    redirect: 'follow',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                // قراءة الرد
-                const result = await response.json();
+                // الانتظار قليلاً لضمان حفظ البيانات
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // جلب التقرير بعد الحفظ
+                const reportResponse = await fetch(SCRIPT_URL + '?action=getReport');
+                const report = await reportResponse.json();
 
                 // إخفاء Loading
                 document.querySelector('.loading').style.display = 'none';
 
                 // عرض رسالة النجاح مع التقرير
-                if (result.categoryTotals && result.grandTotal !== undefined) {
-                    showSuccess(result.categoryTotals, result.grandTotal);
+                if (report.categoryTotals && report.grandTotal !== undefined) {
+                    showSuccess(report.categoryTotals, report.grandTotal);
                 } else {
                     showSuccess(null, null);
                 }
