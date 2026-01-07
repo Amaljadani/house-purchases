@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بناء بيت أحلامنا </title>
+    <title>بناء بيت أحلامنا 🏗️</title>
     <style>
         * {
             margin: 0;
@@ -120,21 +120,43 @@
             padding: 10px;
             cursor: pointer;
             background: #f8f9fa;
+            display: none;
         }
 
-        input[type="file"]::file-selector-button {
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .file-input-label {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
-            padding: 8px 15px;
+            padding: 8px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            margin-left: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
-        input[type="file"]::file-selector-button:hover {
+        .file-input-label:hover {
             opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .file-name {
+            color: #666;
+            font-size: 14px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         input:focus, select:focus {
@@ -330,6 +352,20 @@
                 font-size: 15px;
                 padding: 12px 25px;
             }
+
+            .file-input-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .file-input-label {
+                text-align: center;
+            }
+
+            .file-name {
+                text-align: center;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
@@ -428,7 +464,13 @@
 
             <div class="form-group">
                 <label for="invoice">📎 إرفاق فاتورة (اختياري)</label>
-                <input type="file" id="invoice" name="invoice" accept="image/*,.pdf">
+                <div class="file-input-wrapper">
+                    <input type="file" id="invoice" name="invoice" accept="image/*,.pdf" style="display: none;">
+                    <label for="invoice" class="file-input-label" id="fileLabel">
+                        اختيار ملف
+                    </label>
+                    <span class="file-name" id="fileName">لم يتم اختيار اي ملف</span>
+                </div>
                 <small style="display: block; color: #999; margin-top: 5px; font-size: 13px;">
                     صور أو PDF فقط (حد أقصى 5 ميجابايت)
                 </small>
@@ -458,7 +500,7 @@
         </div>
 
         <div class="footer">
-            بُني بكل  ❤️
+            بُني بكل حب ❤️
         </div>
     </div>
 
@@ -485,6 +527,20 @@
 
         // تعيين التاريخ الحالي تلقائياً
         document.getElementById('date').valueAsDate = new Date();
+
+        // معالج تغيير اختيار الملف
+        document.getElementById('invoice').addEventListener('change', function(e) {
+            const fileName = document.getElementById('fileName');
+            if (e.target.files.length > 0) {
+                fileName.textContent = e.target.files[0].name;
+                fileName.style.color = '#333';
+                fileName.style.fontWeight = '500';
+            } else {
+                fileName.textContent = 'لم يتم اختيار اي ملف';
+                fileName.style.color = '#666';
+                fileName.style.fontWeight = 'normal';
+            }
+        });
 
         // العناصر
         const quantityInput = document.getElementById('quantity');
@@ -683,6 +739,9 @@
                 document.getElementById('totalPrice').value = '';
                 document.getElementById('notes').value = '';
                 document.getElementById('invoice').value = '';
+                document.getElementById('fileName').textContent = 'لم يتم اختيار اي ملف';
+                document.getElementById('fileName').style.color = '#666';
+                document.getElementById('fileName').style.fontWeight = 'normal';
                 calculationDisplay.classList.remove('show');
                 submitBtn.disabled = true;
 
