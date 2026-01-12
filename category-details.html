@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل القسم - بناء بيت أحلامنا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #00a8cc;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            gap: 12px;
+            color: #0088aa;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .category-icon {
+            font-size: 48px;
+        }
+
+        .category-title h1 {
+            color: #00a8cc;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .category-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .items-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .purchase-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 5px solid #00a8cc;
+            transition: all 0.3s ease;
+        }
+
+        .purchase-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .purchase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .purchase-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .purchase-total {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00a8cc;
+        }
+
+        .purchase-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .purchase-notes {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00a8cc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .category-title h1 {
+                font-size: 24px;
+            }
+
+            .category-summary {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .purchase-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="report.html" class="back-button">
+                <span>→</span>
+                <span>العودة للتقرير</span>
+            </a>
+
+            <div class="category-header">
+                <div class="category-icon" id="categoryIcon">📦</div>
+                <div class="category-title">
+                    <h1 id="categoryName">تحميل...</h1>
+                </div>
+            </div>
+        </div>
+
+        <div id="loadingSection" class="loading">
+            <div class="spinner"></div>
+            <p style="color: #00a8cc; font-size: 16px;">جاري تحميل التفاصيل...</p>
+        </div>
+
+        <div id="detailsSection" style="display: none;">
+            <div class="category-summary">
+                <div class="summary-item">
+                    <div class="summary-label">عدد المشتريات</div>
+                    <div class="summary-value" id="itemsCount">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">الإجمالي الكلي</div>
+                    <div class="summary-value" id="categoryTotal">0 ريال</div>
+                </div>
+            </div>
+
+            <div class="items-section">
+                <div class="section-title">
+                    <span>📦</span>
+                    <span>جميع المشتريات</span>
+                </div>
+                <div id="itemsList"></div>
+            </div>
+        </div>
+
+        <div id="errorSection" style="display: none;">
+            <div class="error-message">
+                <p>حدث خطأ في تحميل التفاصيل</p>
+                <p style="font-size: 14px; margin-top: 10px;">يرجى المحاولة مرة أخرى</p>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="report.html" class="back-button" style="display: inline-flex;">
+                    <span>→</span>
+                    <span>العودة للتقرير</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // رابط Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2Q38oI6ZLanRw4844JvHHWHDVnCHdwYQxCgEt508SOmAeBmwNHQpxnkTlBVKdaP3z/exec';
+
+        // أيقونات التصنيفات
+        const categoryIcons = {
+            'مواد بناء': '🏗️',
+            'تشطيبات': '🎨',
+            'سيراميك وبلاط': '🔲',
+            'أبواب ونوافذ': '🚪',
+            'كهرباء': '⚡',
+            'سباكة': '🚰',
+            'تكييف وتهوية': '❄️',
+            'أدوات ومعدات': '🔧',
+            'عمالة': '👷',
+            'دفعات السباك': '🚰',
+            'دفعات الكهربائي': '⚡',
+            'دفعات المقاول': '📦',
+            'رسوم/مصاريف حكومية': '📦',
+            'المكتب الهندسي': '📦',
+            'أخرى': '📦'
+        };
+
+        // دالة تنسيق الأرقام
+        function formatArabicNumber(number) {
+            const formatted = number.toFixed(2);
+            const parts = formatted.split('.');
+            const integerPart = parts[0];
+            const decimalPart = parts[1];
+            const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return withCommas + '.' + decimalPart;
+        }
+
+        // دالة تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('ar-SA', options);
+        }
+
+        // الحصول على اسم القسم من الـURL
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryName = urlParams.get('category');
+
+        if (!categoryName) {
+            window.location.href = 'report.html';
+        } else {
+            // تحديث عنوان الصفحة
+            document.getElementById('categoryName').textContent = categoryName;
+            document.getElementById('categoryIcon').textContent = categoryIcons[categoryName] || '📦';
+            
+            // تحميل التفاصيل
+            loadCategoryDetails(categoryName);
+        }
+
+        async function loadCategoryDetails(category) {
+            document.getElementById('detailsSection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+
+            try {
+                console.log('Fetching category details from Google Apps Script...');
+                
+                const response = await fetch(SCRIPT_URL + '?action=getCategoryDetails&category=' + encodeURIComponent(category));
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch category details');
+                }
+                
+                const data = await response.json();
+                
+                console.log('Category details received:', data);
+
+                if (data.items && Array.isArray(data.items)) {
+                    displayCategoryDetails(data.items, data.total);
+                } else {
+                    throw new Error('Invalid data format');
+                }
+
+            } catch (error) {
+                console.error('Error loading category details:', error);
+                showError();
+            }
+        }
+
+        function displayCategoryDetails(items, total) {
+            const itemsList = document.getElementById('itemsList');
+            const itemsCount = document.getElementById('itemsCount');
+            const categoryTotal = document.getElementById('categoryTotal');
+
+            // تحديث الملخص
+            itemsCount.textContent = items.length;
+            categoryTotal.textContent = formatArabicNumber(total) + ' ريال';
+
+            // عرض المشتريات
+            if (items.length > 0) {
+                let html = '';
+                items.forEach(item => {
+                    const formattedTotal = formatArabicNumber(item.total);
+                    const formattedPrice = formatArabicNumber(item.pricePerUnit);
+                    const formattedQuantity = formatArabicNumber(item.quantity);
+                    const formattedDate = formatDate(item.date);
+
+                    html += `
+                        <div class="purchase-item">
+                            <div class="purchase-header">
+                                <div class="purchase-name">${item.product}</div>
+                                <div class="purchase-total">${formattedTotal} ريال</div>
+                            </div>
+                            <div class="purchase-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">الكمية</div>
+                                    <div class="detail-value">${formattedQuantity}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">سعر القطعة</div>
+                                    <div class="detail-value">${formattedPrice} ريال</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">التاريخ</div>
+                                    <div class="detail-value">${formattedDate}</div>
+                                </div>
+                            </div>
+                            ${item.notes && item.notes !== '-' ? `
+                                <div class="purchase-notes">
+                                    📝 ${item.notes}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                itemsList.innerHTML = html;
+            } else {
+                itemsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">📭</div>
+                        <p>لا توجد مشتريات في هذا القسم</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('detailsSection').style.display = 'block';
+        }
+
+        function showError() {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
