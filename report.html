@@ -100,11 +100,29 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .category-item:hover {
             transform: translateX(-5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .category-item::after {
+            content: '←';
+            position: absolute;
+            left: 15px;
+            font-size: 20px;
+            color: #00a8cc;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover::after {
+            opacity: 1;
+            left: 10px;
         }
 
         .category-name {
@@ -231,6 +249,14 @@
             margin-bottom: 20px;
         }
 
+        .hint-text {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 25px;
@@ -274,6 +300,7 @@
                     <span>التوزيع حسب القسم</span>
                 </div>
                 <div id="categoryList"></div>
+                <div class="hint-text">💡 اضغط على أي قسم لعرض التفاصيل</div>
             </div>
 
             <div class="grand-total">
@@ -300,11 +327,11 @@
             </div>
             <div class="action-buttons">
                 <button onclick="loadReport()" class="btn btn-primary">
-                    <span></span>
+                    <span>🔄</span>
                     <span>إعادة المحاولة</span>
                 </button>
                 <a href="index.html" class="btn btn-secondary">
-                    <span></span>
+                    <span>🏠</span>
                     <span>العودة للصفحة الرئيسية</span>
                 </a>
             </div>
@@ -332,23 +359,21 @@
             'تكييف وتهوية': '❄️',
             'أدوات ومعدات': '🔧',
             'عمالة': '👷',
+            'دفعات السباك': '🚰',
+            'دفعات الكهربائي': '⚡',
+            'دفعات المقاول': '📦',
+            'رسوم/مصاريف حكومية': '📦',
+            'المكتب الهندسي': '📦',
             'أخرى': '📦'
         };
 
         // دالة تنسيق الأرقام بالنظام الأمريكي
         function formatArabicNumber(number) {
-            // تحويل الرقم لصيغة عشرية بمنزلتين
             const formatted = number.toFixed(2);
-            
-            // فصل الجزء الصحيح عن العشري
             const parts = formatted.split('.');
             const integerPart = parts[0];
             const decimalPart = parts[1];
-            
-            // إضافة الفواصل للأرقام الكبيرة (فاصلة إنجليزية)
             const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            
-            // دمج الجزء الصحيح والعشري بنقطة
             return withCommas + '.' + decimalPart;
         }
 
@@ -356,7 +381,6 @@
         window.addEventListener('load', loadReport);
 
         async function loadReport() {
-            // إخفاء الأقسام الأخرى
             document.getElementById('reportSection').style.display = 'none';
             document.getElementById('errorSection').style.display = 'none';
             document.getElementById('loadingSection').style.display = 'block';
@@ -390,9 +414,7 @@
             const categoryList = document.getElementById('categoryList');
             const grandTotalAmount = document.getElementById('grandTotalAmount');
 
-            // عرض التصنيفات
             if (Object.keys(categoryTotals).length > 0) {
-                // ترتيب التصنيفات حسب المبلغ (الأكبر أولاً)
                 const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
 
                 let html = '';
@@ -401,7 +423,7 @@
                     const formattedTotal = formatArabicNumber(total);
 
                     html += `
-                        <div class="category-item">
+                        <div class="category-item" onclick="viewCategoryDetails('${category}')">
                             <div class="category-name">
                                 <span class="category-icon">${icon}</span>
                                 <span>${category}</span>
@@ -421,11 +443,9 @@
                 `;
             }
 
-            // عرض الإجمالي الكلي
             const formattedGrandTotal = formatArabicNumber(grandTotal);
             grandTotalAmount.textContent = formattedGrandTotal + ' ريال';
 
-            // إظهار قسم التقرير
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('reportSection').style.display = 'block';
         }
@@ -437,6 +457,11 @@
 
         function refreshReport() {
             loadReport();
+        }
+
+        function viewCategoryDetails(category) {
+            // الانتقال لصفحة التفاصيل مع تمرير اسم القسم
+            window.location.href = `category-details.html?category=${encodeURIComponent(category)}`;
         }
     </script>
 </body>
